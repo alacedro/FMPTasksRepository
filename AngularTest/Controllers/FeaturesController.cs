@@ -3,23 +3,26 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using AngularTest.Models.AODB;
+using Microsoft.Extensions.Configuration;
 
 namespace AngularTest.Controllers
 {
     [Route("api/[controller]")]
     public class FeaturesController : Controller
     {
-        private readonly AODBContext context;
+        private readonly AODBContext Context;
+        public IConfiguration Configuration { get; }
 
-        public FeaturesController(AODBContext context)
+        public FeaturesController(AODBContext context, IConfiguration configuration)
         {
-            this.context = context;
+            this.Context = context;
+            this.Configuration = configuration;
         }
 
         [HttpGet("[action]")]
         public IEnumerable<FeatureModel> GetFeatures()
         {
-            var features = context.Feature.OrderBy(f => f.Name).Select(f => new FeatureModel
+            var features = Context.Feature.OrderBy(f => f.Name).Select(f => new FeatureModel
             {
                 FeatureId = f.FeatureId,
                 Name = f.Name,
@@ -32,8 +35,8 @@ namespace AngularTest.Controllers
         [HttpGet("[action]")]
         public IEnumerable<FeatureClientModel> GetFeatureClients(int featureId)
         {
-            var featureClients = (from f in context.FeatureClient
-                                  from c in context.Client
+            var featureClients = (from f in Context.FeatureClient
+                                  from c in Context.Client
                                   where c.ClientId == f.ClientId 
                                     && f.FeatureId == featureId
                                     && c.DeactivateDateTime == null
@@ -51,11 +54,11 @@ namespace AngularTest.Controllers
         [HttpGet("[action]")]
         public IEnumerable<ClientModel> GetClientsAvailableForFeature(int featureId)
         {
-            var featureClientIds = from fc in context.FeatureClient
+            var featureClientIds = from fc in Context.FeatureClient
                                    where fc.FeatureId == featureId
                                    select fc.ClientId;
 
-            var clients = (from c in context.Client
+            var clients = (from c in Context.Client
                                   where !featureClientIds.Contains(c.ClientId)
                                     && c.DeactivateDateTime == null
                                   select new ClientModel
@@ -71,12 +74,12 @@ namespace AngularTest.Controllers
         public void ActivateFeatureForClient(int featureId, int clientID)
         {
             
-            var featureClient = context.FeatureClient.Where(fc => fc.FeatureId == featureId && fc.ClientId == clientID).FirstOrDefault();
+            var featureClient = Context.FeatureClient.Where(fc => fc.FeatureId == featureId && fc.ClientId == clientID).FirstOrDefault();
 
             if (featureClient != null)
             {
                 featureClient.Active = true;
-                context.SaveChanges();
+                Context.SaveChanges();
             }                    
         }
 
@@ -84,12 +87,12 @@ namespace AngularTest.Controllers
         public void DeactivateFeatureForClient(int featureId, int clientID)
         {
             
-            var featureClient = context.FeatureClient.Where(fc => fc.FeatureId == featureId && fc.ClientId == clientID).FirstOrDefault();
+            var featureClient = Context.FeatureClient.Where(fc => fc.FeatureId == featureId && fc.ClientId == clientID).FirstOrDefault();
 
             if (featureClient != null)
             {
                 featureClient.Active = false;
-                context.SaveChanges();
+                Context.SaveChanges();
             }
         }
 
@@ -106,8 +109,23 @@ namespace AngularTest.Controllers
                 CreateUser = ""
             };
 
-            context.FeatureClient.Add(newFeatureClient);
-            context.SaveChanges();
+            Context.FeatureClient.Add(newFeatureClient);
+            Context.SaveChanges();
+        }
+
+        [HttpGet("[action]")]
+        public IEnumerable<String> GetServers()
+        {
+            var serversSetting = Configuration["Servers"];
+
+            if (serversSetting != null)
+            {
+                return serversSetting.Split(',').Select(s => s.Trim());
+            }
+            else
+            {
+                return null;
+            }
         }
     }
 

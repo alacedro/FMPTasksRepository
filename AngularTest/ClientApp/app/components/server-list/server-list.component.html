@@ -1,0 +1,10 @@
+﻿<br/>
+<div>
+    <label>Servers: </label>
+    <select *ngIf="serverList.length >= 1" (change)="serverChanged($event.target.value)">
+        <option *ngFor="let server of serverList" value={{server}}>
+            {{server}}
+        </option>
+    </select>
+</div>
+<br/>

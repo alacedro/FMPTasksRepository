@@ -1,5 +1,7 @@
 ﻿<h1>FMP2 Features</h1>
 
+<server-list (onServerChanged)="serverChanged($event)"></server-list>
+
 <p *ngIf="features.length < 1"><em>No features available</em></p>
 
 <div>

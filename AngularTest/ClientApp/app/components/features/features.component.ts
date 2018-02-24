@@ -98,6 +98,10 @@ export class FeaturesComponent
     {
         this.selectedAvailableClientId = clientId;
     }
+
+    serverChanged(server: string) {
+        console.log(server);
+    }
 }
 
 interface Feature
