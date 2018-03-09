@@ -61,6 +61,7 @@
   },
   "dependencies": {
     "@types/jquery": "^3.3.0",
+    "es6-promise": "^4.2.4",
     "popper.js": "^1.12.9"
   }
 }
