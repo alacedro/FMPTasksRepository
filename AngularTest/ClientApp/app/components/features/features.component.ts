@@ -1,5 +1,6 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { HttpHeaders } from '@angular/common/http';
 
 @Component({
     selector: 'features',
@@ -19,6 +20,15 @@ export class FeaturesComponent
     public availableClients: Client[];
     public selectedAvailableClientId: number;
 
+    private noCacheHttpHeader = {
+        headers: new HttpHeaders({
+            'Cache-Control':'no-cache',
+            'Pragma':'no-cache',
+            'Expires': 'Sat, 01 Jan 2000 00:00:00 GMT',
+            'If-Modified-Since': '0'
+        })
+    };
+
     constructor(httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
 
         this.httpClient = httpClient;
@@ -31,12 +41,16 @@ export class FeaturesComponent
         this.availableClients = [];
         this.selectedAvailableClientId = 0;
 
-        this.httpClient.get(baseUrl + 'api/Features/GetFeatures').subscribe(result => {
+        this.getFeatures();
+    }
+
+    getFeatures() {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatures').subscribe(result => {
             this.features = result as Feature[];
             if (this.features.length > 0) {
                 this.loadFeatureInfo(this.features[0].featureId);
             }
-            
+
         }, error => console.error(error));
     }
 
@@ -49,7 +63,7 @@ export class FeaturesComponent
 
     getFeatureClients(featureId: any) {
 
-        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatureClients/?featureId=' + featureId).subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatureClients/?featureId=' + featureId, this.noCacheHttpHeader).subscribe(result => {
             this.featureClients = result as FeatureClient[];
         }, error => console.error(error));
         
@@ -64,7 +78,7 @@ export class FeaturesComponent
     showAddClientPopUp()
     {
         this.addClientPopUpVisible = true;
-        this.httpClient.get(this.baseUrl + 'api/Features/GetClientsAvailableForFeature/?featureId=' + this.featureId).subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetClientsAvailableForFeature/?featureId=' + this.featureId, this.noCacheHttpHeader).subscribe(result => {
             this.availableClients = result as Client[];
         }, error => console.error(error));
     }
@@ -75,20 +89,20 @@ export class FeaturesComponent
     }
 
     activateFeatureForClient(clientId: any) {
-        this.httpClient.get(this.baseUrl + 'api/Features/ActivateFeatureForClient/?featureId=' + this.featureId + "&clientId=" + clientId).subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/ActivateFeatureForClient/?featureId=' + this.featureId + "&clientId=" + clientId, this.noCacheHttpHeader).subscribe(result => {
             this.loadFeatureInfo(this.featureId);
         }, error => console.error(error));
     }
 
     deactivateFeatureForClient(clientId: any) {
-        this.httpClient.get(this.baseUrl + 'api/Features/DeactivateFeatureForClient/?featureId=' + this.featureId + "&clientId=" + clientId).subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/DeactivateFeatureForClient/?featureId=' + this.featureId + "&clientId=" + clientId, this.noCacheHttpHeader).subscribe(result => {
             this.loadFeatureInfo(this.featureId);
         }, error => console.error(error));
     }
 
     addClientToFeature()
     {
-        this.httpClient.get(this.baseUrl + 'api/Features/AddClientToFeature/?featureId=' + this.featureId + "&clientId=" + this.selectedAvailableClientId).subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/AddClientToFeature/?featureId=' + this.featureId + "&clientId=" + this.selectedAvailableClientId, this.noCacheHttpHeader).subscribe(result => {
             this.addClientPopUpVisible = false;
             this.loadFeatureInfo(this.featureId);
         }, error => console.error(error));

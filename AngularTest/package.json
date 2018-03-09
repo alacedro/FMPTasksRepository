@@ -30,8 +30,6 @@
     "chai": "4.1.2",
     "css": "2.2.1",
     "css-loader": "0.28.9",
-    "es6-shim": "0.35.3",
-    "event-source-polyfill": "0.0.12",
     "expose-loader": "0.7.4",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.6",
@@ -54,14 +52,17 @@
     "to-string-loader": "1.1.5",
     "typescript": "2.7.1",
     "url-loader": "0.6.2",
-    "webpack": "3.10.0",
+    "webpack": "^3.10.0",
+    "webpack-cli": "^2.0.10",
     "webpack-hot-middleware": "2.21.0",
     "webpack-merge": "4.1.1",
     "zone.js": "0.8.20"
   },
   "dependencies": {
     "@types/jquery": "^3.3.0",
-    "es6-promise": "^4.2.4",
-    "popper.js": "^1.12.9"
+    "core-js": "^2.5.3",
+    "event-source-polyfill": "0.0.12",
+    "popper.js": "^1.12.9",
+    "primeng": "^5.2.1"
   }
 }
