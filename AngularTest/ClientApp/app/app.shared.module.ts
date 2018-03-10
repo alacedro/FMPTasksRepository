@@ -3,6 +3,8 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
+import { DropdownModule } from 'primeng/dropdown';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -33,7 +35,9 @@ import { ServerListComponent } from './components/server-list/server-list.compon
             { path: 'fetch-data', component: FetchDataComponent },
             { path: 'features', component: FeaturesComponent },
             { path: '**', redirectTo: 'home' }
-        ])
+        ]),
+        DropdownModule,
+        BrowserAnimationsModule
     ]
 })
 export class AppModuleShared {

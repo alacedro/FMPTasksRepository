@@ -1,14 +1,15 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
+import { OnInit } from '@angular/core';
 
 @Component({
     selector: 'features',
-    templateUrl: './features.component.html'
+    templateUrl: './features.component.html',
+    styleUrls: ['./features.component.css']
 })
 
-export class FeaturesComponent
-{
+export class FeaturesComponent implements OnInit {
     
     public features: Feature[];
     public featureClients: FeatureClient[];
@@ -19,6 +20,7 @@ export class FeaturesComponent
     public addClientPopUpVisible: boolean;
     public availableClients: Client[];
     public selectedAvailableClientId: number;
+    public selectedFeature: Feature;
 
     private noCacheHttpHeader = {
         headers: new HttpHeaders({
@@ -40,9 +42,13 @@ export class FeaturesComponent
         this.addClientPopUpVisible = false;
         this.availableClients = [];
         this.selectedAvailableClientId = 0;
+        this.selectedFeature = { featureId: 0, name: '', active: false };
+    }
 
+    ngOnInit() {
         this.getFeatures();
     }
+
 
     getFeatures() {
         this.httpClient.get(this.baseUrl + 'api/Features/GetFeatures').subscribe(result => {

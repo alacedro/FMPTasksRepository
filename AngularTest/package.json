@@ -62,6 +62,7 @@
     "@types/jquery": "^3.3.0",
     "core-js": "^2.5.3",
     "event-source-polyfill": "0.0.12",
+    "font-awesome": "^4.7.0",
     "popper.js": "^1.12.9",
     "primeng": "^5.2.1"
   }
