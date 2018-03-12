@@ -7,3 +7,11 @@
 .fa-times {
     color: red;
 }
+
+.col-3 {
+    white-space: nowrap;
+    width: 100px;
+    overflow: hidden;
+    flex-basis: 100%;
+}
+

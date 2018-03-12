@@ -4,6 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { HttpClientModule } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
+import { ButtonModule } from 'primeng/button';
+import { DialogModule } from 'primeng/dialog';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './components/app/app.component';
@@ -37,6 +39,8 @@ import { ServerListComponent } from './components/server-list/server-list.compon
             { path: '**', redirectTo: 'home' }
         ]),
         DropdownModule,
+        ButtonModule,
+        DialogModule,
         BrowserAnimationsModule
     ]
 })

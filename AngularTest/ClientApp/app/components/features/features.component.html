@@ -31,6 +31,7 @@
                 <th class="col-8">Client</th>
                 <th class="col-3">Active</th>
                 <th class="col-3">Action</th>
+                <th class="col-1"></th>
             </tr>
         </thead>
         <tbody>
@@ -41,10 +42,13 @@
                     <ng-template #inactive_feature><span class='fa fa-times'></span></ng-template>
                 </td>
                 <td class="col-3">
-                    <span *ngIf="featureClient.active;else inactive_feature_button" >
-                        <button type="button" class="btn btn-default" (click)="deactivateFeatureForClient(featureClient.clientId)">Deactivate</button>
+                    <span *ngIf="featureClient.active;else inactive_feature_button">
+                        <p-button (onClick)="deactivateFeatureForClient(featureClient.clientId)" label="Deactivate"></p-button>
                     </span>
-                    <ng-template #inactive_feature_button><span ><button type="button" class="btn btn-default" (click)="activateFeatureForClient(featureClient.clientId)">Activate</button></span></ng-template>
+                    <ng-template #inactive_feature_button><span><p-button (onClick)="activateFeatureForClient(featureClient.clientId)" label="Activate"></p-button></span></ng-template>
+                </td>
+                <td class="col-1">
+                    <p-button (onClick)="removeClientFromFeature(featureClient.clientId)" icon="fa fa-trash"></p-button>
                 </td>
             </tr>
         </tbody>
@@ -52,31 +56,23 @@
 </div>
 <br />
 
-    <button class="btn" (click)="showAddClientPopUp()">Add client</button>
+<p-button (onClick)="showAddClientPopUp()"label="Add client" ></p-button>
 
 
-<div *ngIf="addClientPopUpVisible" class="modal fade show in" id="myModal" role="dialog">
-    <div class="modal-dialog">
-
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" (click)="hideAddClientPopUp()">&times;</button>
-                <h4 class="modal-title">Add client to feature</h4>
-            </div>
-            <div class="modal-body">
-                <label>Available client list: </label>
-                <p *ngIf="availableClients.length < 1"><em>No clients available</em></p>
-                <select *ngIf="availableClients.length >= 1" (change)="changeSelectedAvailableClientId($event.target.value)">
-                    <option *ngFor="let client of availableClients" value={{client.clientId}}>
-                        {{client.companyName}}
-                    </option>
-                </select>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-default" (click)="addClientToFeature()">Add</button>
-                <button type="button" class="btn btn-default" (click)="hideAddClientPopUp()">Cancel</button>
-            </div>
-        </div>
-    </div>
-</div>
+<p-dialog [(visible)]="addClientPopUpVisible" autoAlign="false">
+    <p-header>
+        <h4>Add client to feature</h4>
+    </p-header>
+    <label>Available client list: </label>
+    <p *ngIf="availableClients.length < 1"><em>No clients available</em></p>
+    <select *ngIf="availableClients.length >= 1" (change)="changeSelectedAvailableClientId($event.target.value)">
+        <option *ngFor="let client of availableClients" value={{client.clientId}}>
+            {{client.companyName}}
+        </option>
+    </select>
+    <p-footer>
+        <p-button (onClick)="addClientToFeature()" label="Add"></p-button>
+        <p-button (onClick)="hideAddClientPopUp()" label="Cancel"></p-button>
+    </p-footer>
+</p-dialog>
 

@@ -114,6 +114,19 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
+        public void RemoveClientFromFeature(int featureId, int clientID)
+        {
+
+            var featureClientToRemove = Context.FeatureClient.Where(fc => fc.FeatureId == featureId && fc.ClientId == clientID).FirstOrDefault();
+
+            if (featureClientToRemove != null)
+            {
+                Context.FeatureClient.Remove(featureClientToRemove);
+                Context.SaveChanges();
+            }
+        }
+
+        [HttpGet("[action]")]
         public IEnumerable<String> GetServers()
         {
             var serversSetting = Configuration["Servers"];

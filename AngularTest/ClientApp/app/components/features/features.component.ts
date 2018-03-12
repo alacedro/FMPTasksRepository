@@ -114,6 +114,12 @@ export class FeaturesComponent implements OnInit {
         }, error => console.error(error));
     }
 
+    removeClientFromFeature(clientId: any) {
+        this.httpClient.get(this.baseUrl + 'api/Features/RemoveClientFromFeature/?featureId=' + this.featureId + "&clientId=" + clientId, this.noCacheHttpHeader).subscribe(result => {
+            this.loadFeatureInfo(this.featureId);
+        }, error => console.error(error));
+    }
+
     changeSelectedAvailableClientId(clientId: any)
     {
         this.selectedAvailableClientId = clientId;
