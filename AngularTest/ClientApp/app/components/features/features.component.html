@@ -6,7 +6,7 @@
 
 <div>
     <label>Features list: </label>
-    <p-dropdown [options]="features" [(ngModel)]="selectedFeature" optionLabel="name" (onChange)="loadFeatureInfo($event.value.featureId)"></p-dropdown>
+    <p-dropdown [options]="features" [(ngModel)]="selectedFeature" optionLabel="name" (onChange)="loadFeatureInfo($event.value.featureId)" [autoWidth]="false"></p-dropdown>
     <!--<select *ngIf="features.length >= 1" (change)="loadFeatureInfo($event.target.value)">
         <option *ngFor="let feature of features" value={{feature.featureId}}>
             {{feature.name}}

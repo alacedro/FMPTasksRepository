@@ -1,10 +1,11 @@
 ﻿<br/>
 <div>
     <label>Servers: </label>
-    <select *ngIf="serverList.length >= 1" (change)="serverChanged($event.target.value)">
+    <p-dropdown [options]="servers" optionLabel="name" (onChange)="loadFeatureInfo($event.value)" [autoWidth]="false"></p-dropdown>
+    <!--<select *ngIf="serverList.length >= 1" (change)="serverChanged($event.target.value)">
         <option *ngFor="let server of serverList" value={{server}}>
             {{server}}
         </option>
-    </select>
+    </select>-->
 </div>
 <br/>
