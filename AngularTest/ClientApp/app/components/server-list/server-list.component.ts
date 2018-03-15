@@ -19,11 +19,7 @@ export class ServerListComponent {
         this.servers = [];
 
         this.httpClient.get(baseUrl + 'api/Features/GetServers').subscribe(result => {
-            var serversResult = result as string[];
-            if (serversResult != null) {
-                this.servers = serversResult.map(s => { return { name: s } });
-            }
-            
+            this.servers = result as Server[];            
         }, error => console.error(error));
     }
 
@@ -34,4 +30,5 @@ export class ServerListComponent {
 
 interface Server {
     name: string;
+    credsRequiredToUpdate: boolean;
 }

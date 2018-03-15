@@ -127,18 +127,11 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<String> GetServers()
+        public IEnumerable<ServerModel> GetServers()
         {
-            var serversSetting = Configuration["Servers"];
+            var serversSetting = Configuration.GetSection("Servers")?.Get<List<ServerModel>>();
 
-            if (serversSetting != null)
-            {
-                return serversSetting.Split(',').Select(s => s.Trim());
-            }
-            else
-            {
-                return null;
-            }
+            return serversSetting;
         }
     }
 
@@ -161,6 +154,12 @@ namespace AngularTest.Controllers
     {
         public int ClientId { get; set; }
         public string CompanyName { get; set; }
+    }
+
+    public class ServerModel
+    {
+        public string Name { get; set; }
+        public bool CredsRequiredToUpdate { get; set; }
     }
 
 }
