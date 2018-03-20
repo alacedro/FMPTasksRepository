@@ -13,6 +13,7 @@ export class FeaturesComponent implements OnInit {
     
     public features: Feature[];
     public featureClients: FeatureClient[];
+    public featureFlags: FeatureFlag[];
     public activeFeature: boolean;
     public httpClient: HttpClient;
     public baseUrl: string;
@@ -37,6 +38,7 @@ export class FeaturesComponent implements OnInit {
         this.baseUrl = baseUrl;
         this.features = [];
         this.featureClients = [];
+        this.featureFlags = [];
         this.activeFeature = false;
         this.featureId = 0;
         this.addClientPopUpVisible = false;
@@ -75,10 +77,18 @@ export class FeaturesComponent implements OnInit {
         
     }
 
+    getFeatureFlags(featureId: any) {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatureFlags/?featureId=' + featureId, this.noCacheHttpHeader).subscribe(result => {
+            this.featureFlags = result as FeatureFlag[];
+        }, error => console.error(error));
+    }
+
+
     loadFeatureInfo(featureId: any) {
         this.showFeatureStatus(featureId);
         this.getFeatureClients(featureId);
-        this.featureId = featureId;
+        this.getFeatureFlags(featureId);
+        this.featureId = featureId;        
     }
 
     showAddClientPopUp()
@@ -142,6 +152,13 @@ interface FeatureClient {
     clientId: number;
     companyName: string;
     active: boolean;
+}
+
+interface FeatureFlag {
+    featureId: number;
+    featureFlagId: number;
+    flagName: string;
+    flagValue: number;
 }
 
 interface Client {

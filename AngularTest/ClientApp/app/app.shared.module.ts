@@ -6,6 +6,7 @@ import { RouterModule } from '@angular/router';
 import { DropdownModule } from 'primeng/dropdown';
 import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
+import { TabViewModule } from 'primeng/tabview';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { AppComponent } from './components/app/app.component';
@@ -41,6 +42,7 @@ import { ServerListComponent } from './components/server-list/server-list.compon
         DropdownModule,
         ButtonModule,
         DialogModule,
+        TabViewModule,
         BrowserAnimationsModule
     ]
 })

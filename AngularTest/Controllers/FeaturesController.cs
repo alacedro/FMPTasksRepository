@@ -127,6 +127,24 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
+        public IEnumerable<FeatureFlagModel> GetFeatureFlags(int featureId)
+        {
+            var featureFlags = from fc in Context.FeatureConfig
+                               from ff in Context.FeatureFlag
+                               where fc.FeatureId == featureId
+                               && fc.FeatureFlagId == ff.FeatureFlagId
+                               select new FeatureFlagModel
+                               {
+                                   FeatureId = fc.FeatureId,
+                                   FeatureFlagId = fc.FeatureFlagId,
+                                   FlagName = ff.FlagName,
+                                   FlagValue = fc.FeatureFlagValue
+                               };
+
+            return featureFlags;
+        }
+
+        [HttpGet("[action]")]
         public IEnumerable<ServerModel> GetServers()
         {
             var serversSetting = Configuration.GetSection("Servers")?.Get<List<ServerModel>>();
@@ -148,6 +166,14 @@ namespace AngularTest.Controllers
         public int ClientId { get; set; }
         public string CompanyName { get; set; }
         public bool Active { get; set; }
+    }
+
+    public class FeatureFlagModel
+    {
+        public int FeatureId { get; set; }
+        public int FeatureFlagId { get; set; }
+        public string FlagName { get; set; }
+        public int FlagValue { get; set; }
     }
 
     public class ClientModel
