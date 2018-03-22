@@ -1,6 +1,7 @@
 ﻿<h1>FMP2 Features</h1>
 
 <server-list (onServerChanged)="serverChanged($event)"></server-list>
+<p-confirmDialog></p-confirmDialog>
 
 <p *ngIf="features.length < 1"><em>No features available</em></p>
 
@@ -34,6 +35,7 @@
                         <th class="col-3">Active</th>
                         <th class="col-3">Action</th>
                         <th class="col-1"></th>
+                        <th class="col-1"></th>
                     </tr>
                 </thead>
                 <tbody>
@@ -51,6 +53,9 @@
                         </td>
                         <td class="col-1">
                             <p-button (onClick)="removeClientFromFeature(featureClient.clientId)" icon="fa fa-trash"></p-button>
+                        </td>
+                        <td class="col-1">
+                            <p-button (onClick)="getClientConfigurationAttribs(featureClient.featureId, featureClient.clientId)" label="Config"></p-button>
                         </td>
                     </tr>
                 </tbody>

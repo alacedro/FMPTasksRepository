@@ -2,6 +2,8 @@
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
 import { OnInit } from '@angular/core';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'features',
@@ -14,6 +16,7 @@ export class FeaturesComponent implements OnInit {
     public features: Feature[];
     public featureClients: FeatureClient[];
     public featureFlags: FeatureFlag[];
+    public clientConfigurationAttributes: clientConfigurationAttribute[];
     public activeFeature: boolean;
     public httpClient: HttpClient;
     public baseUrl: string;
@@ -39,6 +42,7 @@ export class FeaturesComponent implements OnInit {
         this.features = [];
         this.featureClients = [];
         this.featureFlags = [];
+        this.clientConfigurationAttributes = [];
         this.activeFeature = false;
         this.featureId = 0;
         this.addClientPopUpVisible = false;
@@ -80,6 +84,13 @@ export class FeaturesComponent implements OnInit {
     getFeatureFlags(featureId: any) {
         this.httpClient.get(this.baseUrl + 'api/Features/GetFeatureFlags/?featureId=' + featureId, this.noCacheHttpHeader).subscribe(result => {
             this.featureFlags = result as FeatureFlag[];
+        }, error => console.error(error));
+    }
+
+    getClientConfigurationAttribs(featureId: any, clientId: any) {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetClientConfigurationAttributes/?featureId=' + featureId + "&clientId=" + clientId, this.noCacheHttpHeader).subscribe(result => {
+            this.clientConfigurationAttributes = result as clientConfigurationAttribute[];
+            console.log(result);
         }, error => console.error(error));
     }
 
@@ -159,6 +170,15 @@ interface FeatureFlag {
     featureFlagId: number;
     flagName: string;
     flagValue: number;
+}
+
+interface clientConfigurationAttribute {
+    clientConfigurationAttributeId: number;
+    configurationAttributeId: number;
+    clientId: number;
+    featureId: number;
+    description: string;
+    value: string;
 }
 
 interface Client {

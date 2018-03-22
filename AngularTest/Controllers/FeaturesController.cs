@@ -145,6 +145,26 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
+        public IEnumerable<ClientConfigurationAttributeModel> GetClientConfigurationAttributes(int featureId, int clientId)
+        {
+            var clientConfigurationAttributes = (from c in Context.ClientConfigurationAttribute
+                          join fca in Context.FeatureConfigurationAttribute on c.ConfigurationAttributeId equals fca.ConfigurationAttributeId
+                          join f in Context.Feature on fca.FeatureId equals f.FeatureId
+                          where f.FeatureId == featureId && c.ClientId == clientId
+                          select new ClientConfigurationAttributeModel
+                          {
+                              ClientConfigurationAttributeId = c.ClientConfigurationAttributeId,
+                              ClientId = c.ClientId,
+                              FeatureId = f.FeatureId,
+                              ConfigurationAttributeId = c.ConfigurationAttributeId,
+                              Description = c.ConfigurationAttribute.Description,
+                              Value = c.Value
+                          });
+
+            return clientConfigurationAttributes;
+        }
+
+        [HttpGet("[action]")]
         public IEnumerable<ServerModel> GetServers()
         {
             var serversSetting = Configuration.GetSection("Servers")?.Get<List<ServerModel>>();
@@ -180,6 +200,16 @@ namespace AngularTest.Controllers
     {
         public int ClientId { get; set; }
         public string CompanyName { get; set; }
+    }
+
+    public class ClientConfigurationAttributeModel
+    {
+        public int ClientConfigurationAttributeId { get; set; }
+        public int ConfigurationAttributeId { get; set; }
+        public int ClientId { get; set; }
+        public int FeatureId { get; set; }
+        public string Description { get; set; }
+        public string Value { get; set; }
     }
 
     public class ServerModel
