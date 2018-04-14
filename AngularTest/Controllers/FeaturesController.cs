@@ -20,8 +20,10 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
-        public IEnumerable<FeatureModel> GetFeatures()
+        public IEnumerable<FeatureModel> GetFeatures(string serverName)
         {
+            //Context.
+
             var features = Context.Feature.OrderBy(f => f.Name).Select(f => new FeatureModel
             {
                 FeatureId = f.FeatureId,

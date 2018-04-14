@@ -11,7 +11,7 @@ export class ServerListComponent {
     public servers: Server[];
     public baseUrl: string;
     public httpClient: HttpClient;
-    @Output() onServerChanged = new EventEmitter<string>();
+    @Output() onServerChanged = new EventEmitter();
 
     constructor(httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
         this.baseUrl = baseUrl;
@@ -19,11 +19,14 @@ export class ServerListComponent {
         this.servers = [];
 
         this.httpClient.get(baseUrl + 'api/Features/GetServers').subscribe(result => {
-            this.servers = result as Server[];            
+            this.servers = result as Server[];
+            if (this.servers.length > 0) {
+                this.onServerChanged.emit(this.servers[0]);
+            }
         }, error => console.error(error));
     }
 
-    serverChanged(server: string) {
+    serverChanged(server: any) {
         this.onServerChanged.emit(server);
     }
 }

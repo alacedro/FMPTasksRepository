@@ -1,17 +1,16 @@
 ﻿import { Component, Inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { HttpHeaders } from '@angular/common/http';
-import { OnInit } from '@angular/core';
-import { ConfirmDialogModule } from 'primeng/confirmdialog';
 import { ConfirmationService } from 'primeng/api';
 
 @Component({
     selector: 'features',
     templateUrl: './features.component.html',
-    styleUrls: ['./features.component.css']
+    styleUrls: ['./features.component.css'],
+    providers: [ConfirmationService]
 })
 
-export class FeaturesComponent implements OnInit {
+export class FeaturesComponent {
     
     public features: Feature[];
     public featureClients: FeatureClient[];
@@ -25,6 +24,8 @@ export class FeaturesComponent implements OnInit {
     public availableClients: Client[];
     public selectedAvailableClientId: number;
     public selectedFeature: Feature;
+    public confirmationService: any;
+    public selectedServer: Server;
 
     private noCacheHttpHeader = {
         headers: new HttpHeaders({
@@ -35,7 +36,7 @@ export class FeaturesComponent implements OnInit {
         })
     };
 
-    constructor(httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string) {
+    constructor(httpClient: HttpClient, @Inject('BASE_URL') baseUrl: string, confirmationService: ConfirmationService) {
 
         this.httpClient = httpClient;
         this.baseUrl = baseUrl;
@@ -49,15 +50,12 @@ export class FeaturesComponent implements OnInit {
         this.availableClients = [];
         this.selectedAvailableClientId = 0;
         this.selectedFeature = { featureId: 0, name: '', active: false };
+        this.confirmationService = confirmationService;
+        this.selectedServer = { name: '', credsRequiredToUpdate: false };
     }
-
-    ngOnInit() {
-        this.getFeatures();
-    }
-
 
     getFeatures() {
-        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatures').subscribe(result => {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetFeatures/?serverName=' + this.selectedServer.name).subscribe(result => {
             this.features = result as Feature[];
             if (this.features.length > 0) {
                 this.loadFeatureInfo(this.features[0].featureId);
@@ -146,8 +144,24 @@ export class FeaturesComponent implements OnInit {
         this.selectedAvailableClientId = clientId;
     }
 
-    serverChanged(server: string) {
+    serverChanged(server: any) {
         console.log(server);
+        this.selectedServer = server;
+        this.getFeatures();
+    }
+
+    confirmRemoveClientFromFeature(clientId: any) {
+        this.confirmationService.confirm({
+            message: 'Do you want to delete this record?',
+            header: 'Delete Confirmation',
+            icon: 'fa fa-trash',
+            accept: () => {
+                this.removeClientFromFeature(clientId);
+            },
+            reject: () => {
+                
+            }
+        });
     }
 }
 
@@ -184,4 +198,9 @@ interface clientConfigurationAttribute {
 interface Client {
     clientId: number;
     companyName: string;
+}
+
+interface Server {
+    name: string;
+    credsRequiredToUpdate: boolean;
 }

@@ -52,7 +52,7 @@
                             <ng-template #inactive_feature_button><span><p-button (onClick)="activateFeatureForClient(featureClient.clientId)" label="Activate"></p-button></span></ng-template>
                         </td>
                         <td class="col-1">
-                            <p-button (onClick)="removeClientFromFeature(featureClient.clientId)" icon="fa fa-trash"></p-button>
+                            <p-button (onClick)="confirmRemoveClientFromFeature(featureClient.clientId)" icon="fa fa-trash"></p-button>
                         </td>
                         <td class="col-1">
                             <p-button (onClick)="getClientConfigurationAttribs(featureClient.featureId, featureClient.clientId)" label="Config"></p-button>

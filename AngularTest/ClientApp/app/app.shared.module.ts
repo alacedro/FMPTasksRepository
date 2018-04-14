@@ -8,6 +8,7 @@ import { ButtonModule } from 'primeng/button';
 import { DialogModule } from 'primeng/dialog';
 import { TabViewModule } from 'primeng/tabview';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -43,7 +44,8 @@ import { ServerListComponent } from './components/server-list/server-list.compon
         ButtonModule,
         DialogModule,
         TabViewModule,
-        BrowserAnimationsModule
+        BrowserAnimationsModule,
+        ConfirmDialogModule
     ]
 })
 export class AppModuleShared {
