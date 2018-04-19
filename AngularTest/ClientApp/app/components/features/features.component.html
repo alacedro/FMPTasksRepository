@@ -65,6 +65,8 @@
 
         <p-button (onClick)="showAddClientPopUp()" label="Add client"></p-button>
     </p-tabPanel>
+
+
     <p-tabPanel header="Flags">
         <label>Flag list: </label>
         <div style="max-height:300px; min-height:300px; overflow:auto" class="card bg-faded">
@@ -78,12 +80,16 @@
                 <tbody>
                     <tr *ngFor="let featureFlag of featureFlags">
                         <td class="col-8">{{ featureFlag.flagName }}</td>
-                        <td class="col-3">{{ featureFlag.flagValue }}</td>
+                        <td class="col-3"><input type="text" pInputText value="{{ featureFlag.flagValue }}" [(ngModel)]="featureFlag.flagValue" (ngModelChange)="updateFeatureFlag(featureFlag)" /> </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+        <br />
+        <p-button (onClick)="saveFeatureFlags()" label="Save" [disabled]="featureFlagsToUpdate.length < 1"></p-button>
     </p-tabPanel>
+
+
 </p-tabView>
 
 

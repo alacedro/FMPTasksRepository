@@ -9,6 +9,7 @@ import { DialogModule } from 'primeng/dialog';
 import { TabViewModule } from 'primeng/tabview';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { InputTextModule } from 'primeng/inputtext';
 
 import { AppComponent } from './components/app/app.component';
 import { NavMenuComponent } from './components/navmenu/navmenu.component';
@@ -45,7 +46,8 @@ import { ServerListComponent } from './components/server-list/server-list.compon
         DialogModule,
         TabViewModule,
         BrowserAnimationsModule,
-        ConfirmDialogModule
+        ConfirmDialogModule,
+        InputTextModule
     ]
 })
 export class AppModuleShared {

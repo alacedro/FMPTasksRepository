@@ -15,6 +15,7 @@ export class FeaturesComponent {
     public features: Feature[];
     public featureClients: FeatureClient[];
     public featureFlags: FeatureFlag[];
+    public featureFlagsToUpdate: FeatureFlag[];
     public clientConfigurationAttributes: clientConfigurationAttribute[];
     public activeFeature: boolean;
     public httpClient: HttpClient;
@@ -43,6 +44,7 @@ export class FeaturesComponent {
         this.features = [];
         this.featureClients = [];
         this.featureFlags = [];
+        this.featureFlagsToUpdate = [];
         this.clientConfigurationAttributes = [];
         this.activeFeature = false;
         this.featureId = 0;
@@ -97,7 +99,8 @@ export class FeaturesComponent {
         this.showFeatureStatus(featureId);
         this.getFeatureClients(featureId);
         this.getFeatureFlags(featureId);
-        this.featureId = featureId;        
+        this.featureId = featureId;
+        this.featureFlagsToUpdate = [];
     }
 
     showAddClientPopUp()
@@ -162,6 +165,20 @@ export class FeaturesComponent {
                 
             }
         });
+    }
+
+    updateFeatureFlag(featureFlag: FeatureFlag)
+    {
+        this.featureFlagsToUpdate.push(featureFlag);
+    }
+
+    saveFeatureFlags() {
+
+        if (this.featureFlagsToUpdate.length > 0) {
+            this.httpClient.post<FeatureFlag[]>(this.baseUrl + 'api/Features/SaveFeatureFlags/', this.featureFlagsToUpdate, this.noCacheHttpHeader,).subscribe(result => {
+                this.loadFeatureInfo(this.featureId);
+            }, error => console.error(error));
+        }
     }
 }
 

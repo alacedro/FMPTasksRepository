@@ -22,8 +22,6 @@ namespace AngularTest.Controllers
         [HttpGet("[action]")]
         public IEnumerable<FeatureModel> GetFeatures(string serverName)
         {
-            //Context.
-
             var features = Context.Feature.OrderBy(f => f.Name).Select(f => new FeatureModel
             {
                 FeatureId = f.FeatureId,
@@ -172,6 +170,30 @@ namespace AngularTest.Controllers
             var serversSetting = Configuration.GetSection("Servers")?.Get<List<ServerModel>>();
 
             return serversSetting;
+        }
+
+        [HttpPost("[action]")]
+        public bool SaveFeatureFlags([FromBody] FeatureFlagModel[] featureFlags)
+        {
+            if (featureFlags != null)
+            {
+                foreach (var featureFlag in featureFlags)
+                {
+                    var featureFlagToUpdate = Context.FeatureConfig.FirstOrDefault(fc => fc.FeatureId == featureFlag.FeatureId &&
+                    fc.FeatureFlagId == featureFlag.FeatureFlagId);
+
+                    if (featureFlagToUpdate != null)
+                    {
+                        featureFlagToUpdate.FeatureFlagValue = featureFlag.FlagValue;
+                        Context.SaveChanges();
+                    }
+                }
+                return true;
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 
