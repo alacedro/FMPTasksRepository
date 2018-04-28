@@ -7,12 +7,7 @@
 
 <div>
     <label>Features list: </label>
-    <p-dropdown [options]="features" [(ngModel)]="selectedFeature" optionLabel="name" (onChange)="loadFeatureInfo($event.value.featureId)" [autoWidth]="false"></p-dropdown>
-    <!--<select *ngIf="features.length >= 1" (change)="loadFeatureInfo($event.target.value)">
-        <option *ngFor="let feature of features" value={{feature.featureId}}>
-            {{feature.name}}
-        </option>
-    </select>-->
+    <p-dropdown [options]="features" [(ngModel)]="selectedFeature" optionLabel="name" (onChange)="loadFeatureInfo($event.value.featureId)" [autoWidth]="false"></p-dropdown>    
 </div>
 
 
@@ -55,7 +50,7 @@
                             <p-button (onClick)="confirmRemoveClientFromFeature(featureClient.clientId)" icon="fa fa-trash"></p-button>
                         </td>
                         <td class="col-1">
-                            <p-button (onClick)="getClientConfigurationAttribs(featureClient.featureId, featureClient.clientId)" label="Config"></p-button>
+                            <p-button (onClick)="showEditAttribPopUp(featureClient.featureId, featureClient.clientId)" label="Config"></p-button>
                         </td>
                     </tr>
                 </tbody>
@@ -116,4 +111,33 @@
         <p-button (onClick)="hideAddClientPopUp()" label="Cancel"></p-button>
     </p-footer>
 </p-dialog>
+
+<p-dialog [(visible)]="editAttribPopUpVisible" autoAlign="false" width ="500" (onHide)="hideEditAttribPopUp()">
+    <p-header>
+        <h4>Feature Configuration Attributes</h4>
+    </p-header>
+    <label>Attributes list: </label>
+    <p *ngIf="clientConfigurationAttributes.length < 1"><em>No attributes available</em></p>
+    
+    <table *ngIf="clientConfigurationAttributes.length > 0" class='table table-striped table-bordered table-hover table-condensed table-fixed' id="featureClientTable">
+        <thead>
+            <tr>
+                <th class="col-5">Attribute Description</th>
+                <th class="col-6">Value</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let configAttrib of clientConfigurationAttributes">
+                <td class="col-8">{{ configAttrib.description }}</td>
+                <td class="col-3"><input type="text" pInputText value="{{ configAttrib.value }}" [(ngModel)]="configAttrib.value" /> </td>
+            </tr>
+        </tbody>
+    </table>    
+    <p-footer>
+        <!--<p-button (onClick)="addClientToFeature()" label="Add"></p-button>-->
+        <p-button (onClick)="hideEditAttribPopUp()" label="Cancel"></p-button>
+    </p-footer>
+</p-dialog>
+
+
 

@@ -22,6 +22,7 @@ export class FeaturesComponent {
     public baseUrl: string;
     public featureId: number;
     public addClientPopUpVisible: boolean;
+    public editAttribPopUpVisible: boolean;
     public availableClients: Client[];
     public selectedAvailableClientId: number;
     public selectedFeature: Feature;
@@ -49,6 +50,7 @@ export class FeaturesComponent {
         this.activeFeature = false;
         this.featureId = 0;
         this.addClientPopUpVisible = false;
+        this.editAttribPopUpVisible = false;
         this.availableClients = [];
         this.selectedAvailableClientId = 0;
         this.selectedFeature = { featureId: 0, name: '', active: false };
@@ -94,11 +96,17 @@ export class FeaturesComponent {
         }, error => console.error(error));
     }
 
+    getAvailableClientsForFeature(featureId: any) {
+        this.httpClient.get(this.baseUrl + 'api/Features/GetClientsAvailableForFeature/?featureId=' + featureId, this.noCacheHttpHeader).subscribe(result => {
+            this.availableClients = result as Client[];
+        }, error => console.error(error));
+    }
+
 
     loadFeatureInfo(featureId: any) {
         this.showFeatureStatus(featureId);
         this.getFeatureClients(featureId);
-        this.getFeatureFlags(featureId);
+        this.getFeatureFlags(featureId);        
         this.featureId = featureId;
         this.featureFlagsToUpdate = [];
     }
@@ -106,14 +114,22 @@ export class FeaturesComponent {
     showAddClientPopUp()
     {
         this.addClientPopUpVisible = true;
-        this.httpClient.get(this.baseUrl + 'api/Features/GetClientsAvailableForFeature/?featureId=' + this.featureId, this.noCacheHttpHeader).subscribe(result => {
-            this.availableClients = result as Client[];
-        }, error => console.error(error));
+        this.getAvailableClientsForFeature(this.featureId);
+    }
+
+    showEditAttribPopUp(featureId: any, clientId: any) {
+        this.editAttribPopUpVisible = true;
+        this.getClientConfigurationAttribs(featureId, clientId);
     }
 
     hideAddClientPopUp() {
         this.addClientPopUpVisible = false;
         this.availableClients = [];
+    }
+
+    hideEditAttribPopUp() {
+        this.editAttribPopUpVisible = false;
+        this.clientConfigurationAttributes = [];
     }
 
     activateFeatureForClient(clientId: any) {
