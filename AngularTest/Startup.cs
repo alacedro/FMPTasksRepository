@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using AngularTest.Models.AODB;
+using AngularTest.Models.Import;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.SpaServices.Webpack;
@@ -26,6 +27,7 @@ namespace AngularTest
         {
             services.AddMvc();
             services.AddDbContext<AODBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AODBDatabase")));
+            services.AddDbContext<ImportContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MockZohoConn")));
             services.AddSingleton(Configuration);
         }
 

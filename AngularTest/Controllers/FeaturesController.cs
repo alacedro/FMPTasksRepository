@@ -4,6 +4,12 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using AngularTest.Models.AODB;
 using Microsoft.Extensions.Configuration;
+using System.Net.Http;
+using System.Threading.Tasks;
+using Newtonsoft.Json;
+using AngularTest.Models;
+using AngularTest.Models.Import;
+using System.Diagnostics;
 
 namespace AngularTest.Controllers
 {
@@ -11,11 +17,13 @@ namespace AngularTest.Controllers
     public class FeaturesController : Controller
     {
         private readonly AODBContext Context;
+        private readonly ImportContext ImportContext;
         public IConfiguration Configuration { get; }
 
-        public FeaturesController(AODBContext context, IConfiguration configuration)
+        public FeaturesController(AODBContext context, ImportContext importContext, IConfiguration configuration)
         {
             this.Context = context;
+            this.ImportContext = importContext;
             this.Configuration = configuration;
         }
 
@@ -194,6 +202,87 @@ namespace AngularTest.Controllers
             {
                 return false;
             }
+        }
+
+        [HttpGet("[action]")]
+        public bool ImportZohoRecordsFromAPI()
+        {
+            try
+            {
+
+                var client = new HttpClient();
+                List<ExteriorServicesSchedule> schedules = new List<ExteriorServicesSchedule>();
+
+                var continueImport = true;
+                var pageSize = 1000;
+                var page = 0;
+
+                do
+                {
+                    var urlFormat = Configuration.GetValue<string>("ZohoAPIUrl");
+                    var task = client.GetStringAsync(string.Format(urlFormat, pageSize, pageSize * page));
+                    task.Wait();
+                    var apiResponse = task.Result;
+                    var tempResult = apiResponse.Substring(apiResponse.IndexOf('{'));
+                    if (tempResult[tempResult.Length - 1] != '}')
+                    {
+                        tempResult = tempResult.Remove(tempResult.LastIndexOf('}') + 1);
+                    }
+                    var parsedResult = JsonConvert.DeserializeObject<ZohoRecordCollection>(tempResult);
+                    if (parsedResult != null && parsedResult.Exterior_Services_Schedule.Count > 0)
+                    {
+                        schedules.AddRange(parsedResult.Exterior_Services_Schedule);
+                    }
+                    else
+                    {
+                        continueImport = false;
+                    }
+
+                    page++;
+
+                } while (continueImport);
+
+
+                var existingSchedules = ImportContext.Schedules.ToList();
+
+                if (existingSchedules != null && existingSchedules.Count > 0)
+                {
+                    foreach (var schedule in existingSchedules)
+                    {
+                        ImportContext.Schedules.Remove(schedule);
+                    }
+
+                    ImportContext.SaveChanges();
+                }
+
+                foreach (var schedule in schedules)
+                {
+                    ImportContext.Schedules.Add(schedule);
+                }
+
+                ImportContext.SaveChanges();
+
+                return true;
+
+            }
+            catch (Exception e)
+            {
+                Debug.Write(e.Message);
+                return false;
+            }
+        }
+
+        [HttpGet("[action]")]
+        public ZohoRecordCollection GetZohoRecords(int limit, int startindex)
+        {
+            var existingSchedules = ImportContext.Schedules.Skip(startindex).Take(limit).ToList();
+
+            var result = new ZohoRecordCollection
+            {
+                Exterior_Services_Schedule = existingSchedules
+            };
+
+            return result;
         }
     }
 
