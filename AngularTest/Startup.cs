@@ -26,9 +26,15 @@ namespace AngularTest
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
+
             services.AddDbContext<AODBContext>(options => options.UseSqlServer(Configuration.GetConnectionString("AODBDatabase")));
             services.AddDbContext<ImportContext>(options => options.UseSqlServer(Configuration.GetConnectionString("MockZohoConn")));
             services.AddSingleton(Configuration);
+
+            services.Configure<IISOptions>(options =>
+            {
+                options.ForwardClientCertificate = false;
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,10 +43,10 @@ namespace AngularTest
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
-                {
-                    HotModuleReplacement = true
-                });
+                //app.UseWebpackDevMiddleware(new WebpackDevMiddlewareOptions
+                //{
+                //    HotModuleReplacement = true
+                //});
             }
             else
             {

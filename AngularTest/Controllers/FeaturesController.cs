@@ -275,12 +275,13 @@ namespace AngularTest.Controllers
         [HttpGet("[action]")]
         public ZohoRecordCollection GetZohoRecords(int limit, int startindex)
         {
-            var existingSchedules = ImportContext.Schedules.Skip(startindex).Take(limit).ToList();
+            var result = new ZohoRecordCollection();
 
-            var result = new ZohoRecordCollection
+            if (limit > 0)
             {
-                Exterior_Services_Schedule = existingSchedules
-            };
+                var existingSchedules = ImportContext.Schedules.Skip(startindex).Take(limit).ToList();
+                result.Exterior_Services_Schedule = existingSchedules; 
+            }
 
             return result;
         }
