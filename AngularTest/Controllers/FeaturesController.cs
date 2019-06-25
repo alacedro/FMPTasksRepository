@@ -173,9 +173,15 @@ namespace AngularTest.Controllers
         }
 
         [HttpGet("[action]")]
+        [HttpOptions]
         public IEnumerable<ServerModel> GetServers()
         {
             var serversSetting = Configuration.GetSection("Servers")?.Get<List<ServerModel>>();
+
+            Request.HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            Request.HttpContext.Response.Headers.Add("Access-Control-Allow-Credentials", "true");
+            Request.HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
+            Request.HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers");
 
             return serversSetting;
         }
